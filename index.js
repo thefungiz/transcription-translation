@@ -15,19 +15,22 @@ const transcribe = input => {
         res += seq ? seq : `(${it})`
     }); 
     return res;};
-const translateMap = new Map(JSON.parse('[["AAA","Lysine"],["AUA","Isoleucine"],["ACA","Threonine"],["AGA","Arginine"],["AAU","Asparagine"],["AUU","Isoleucine"],["ACU","Threonine"],["AGU","Serine"],["AAC","Asparagine"],["AUC","Isoleucine"],["ACC","Threonine"],["AGC","Serine"],["AAG","Lysine"],["AUG","Initiation Codon / Methionine"],["ACG","Threonine"],["AGG","Arginine"],["UAA","Stop Codon"],["UUA","Leucine"],["UCA","Serine"],["UGA","Stop Codon"],["UAU","Tyrosine"],["UUU","Phenylalanine"],["UCU","Serine"],["UGU","Cysteine"],["UAC","Tyrosine"],["UUC","Phenylalanine"],["UCC","Serine"],["UGC","Cysteine"],["UAG","Stop Codon"],["UUG","Leucine"],["UCG","Serine"],["UGG","Tryptophan"],["CAA","Glutamine"],["CUA","Leucine"],["CCA","Proline"],["CGA","Arginine"],["CAU","Histidine"],["CUU","Leucine"],["CCU","Proline"],["CGU","Arginine"],["CAC","Histidine"],["CUC","Leucine"],["CCC","Proline"],["CGC","Arginine"],["CAG","Glutamine"],["CUG","Leucine"],["CCG","Proline"],["CGG","Arginine"],["GAA","Glutamic Acid"],["GUA","Valine"],["GCA","Alanine"],["GGA","Glycine"],["GAU","Aspartic Acid"],["GUU","Valine"],["GCU","Alanine"],["GGU","Glycine"],["GAC","Aspartic Acid"],["GUC","Valine"],["GCC","Alanine"],["GGC","Glycine"],["GAG","Glutamic Acid"],["GUG","Valine"],["GCG","Alanine"],["GGG","Glycine"]]'))
+const translateMap = new Map(JSON.parse('[["AAA","Lys"],["AUA","Ile"],["ACA","Thr"],["AGA","Arg"],["AAU","Asn"],["AUU","Ile"],["ACU","Thr"],["AGU","Ser"],["AAC","Asn"],["AUC","Ile"],["ACC","Thr"],["AGC","Ser"],["AAG","Lys"],["AUG","Met"],["ACG","Thr"],["AGG","Arg"],["UAA","Stop Codon"],["UUA","Leu"],["UCA","Ser"],["UGA","Stop Codon"],["UAU","Tyr"],["UUU","Phe"],["UCU","Ser"],["UGU","Cys"],["UAC","Tyr"],["UUC","Phe"],["UCC","Ser"],["UGC","Cys"],["UAG","Stop Codon"],["UUG","Leu"],["UCG","Ser"],["UGG","Trp"],["CAA","Gln"],["CUA","Leu"],["CCA","Pro"],["CGA","Arg"],["CAU","His"],["CUU","Leu"],["CCU","Pro"],["CGU","Arg"],["CAC","His"],["CUC","Leu"],["CCC","Pro"],["CGC","Arg"],["CAG","Gln"],["CUG","Leu"],["CCG","Pro"],["CGG","Arg"],["GAA","Glu"],["GUA","Val"],["GCA","Ala"],["GGA","Gly"],["GAU","Asp"],["GUU","Val"],["GCU","Ala"],["GGU","Gly"],["GAC","Asp"],["GUC","Val"],["GCC","Ala"],["GGC","Gly"],["GAG","Glu"],["GUG","Val"],["GCG","Ala"],["GGG","Gly"]]'));
 const translate = input => {
     const stripped = input.replace(/\s/g,'');
     let index = stripped.indexOf('AUG');
     let stopFound = false;
-    const result = [];
+    let result = '';
     while (index < stripped.length && !stopFound) {
         const codon = stripped.substring(index, index + 3);
         if (['UAG', 'UGA', 'UAA'].includes(codon)) {
             stopFound = true;
         } else {
             const aminoAcid = translateMap.get(codon);
-            result.push(aminoAcid ? aminoAcid : `(${codon})`);
+            if (result.length > 0) {
+                result += ' ';
+            }
+            result += aminoAcid ? aminoAcid : `(${codon})`;
         }
         index += 3;
     }
